@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Data Dashboard</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #1b5e20;
+            --background: #f1f8e9;
+            --text: #333;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--secondary);
+            font-size: 1.25rem;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid #ffeeba;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🌾 Farmer Crop Price & Rainfall Insights</h1>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>Average Crop Price</h2>
+
+                <img src="static/charts/avg_crop_price.png" alt="Average Crop Price Chart">
+
+                
+
+            </div>
+
+            <div class="card">
+                <h2>Total Rainfall by Market</h2>
+                <img src="static/charts/total_rainfall.png" alt="Total Rainfall Chart">
+                
+            </div>
+
+            <div class="card">
+                <h2>Crop Price Prediction</h2>
+                <form action="/predict" method="post">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="crop" style="display: block; margin-bottom: 0.5rem;">Select Crop:</label>
+                        <select id="crop" name="crop" required
+                            style="width: 80%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                            <option value="" disabled selected>-- Choose a Crop --</option>
+                            {% for crop in crops %}
+                            <option value="{{ crop }}" {{ 'selected' if crop==selected_crop else '' }}>{{ crop }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="rainfall" style="display: block; margin-bottom: 0.5rem;">Rainfall (mm):</label>
+                        <input type="number" id="rainfall" name="rainfall" step="0.1"
+                            value="{{ rainfall if rainfall else '' }}" required
+                            style="width: 80%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="temperature" style="display: block; margin-bottom: 0.5rem;">Temperature
+                            (°C):</label>
+                        <input type="number" id="temperature" name="temperature" step="0.1"
+                            value="{{ temperature if temperature else '' }}" required
+                            style="width: 80%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <button type="submit"
+                        style="background-color: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; transition: background 0.2s;">Predict
+                        Price</button>
+                </form>
+
+                {% if prediction is not none %}
+                <div style="margin-top: 1.5rem; display: grid; gap: 1rem;">
+                    <div
+                        style="padding: 1rem; background-color: #e8f5e9; border-radius: 4px; border: 1px solid #c8e6c9;">
+                        <h3 style="margin-top: 0; color: var(--secondary);">Specific Selection</h3>
+                        <p>Crop: <strong>{{ selected_crop }}</strong></p>
+                        <p>Predicted Price: <strong>₹ {{ prediction }}</strong> per kg</p>
+                    </div>
+
+                    <div
+                        style="padding: 1rem; background-color: #e3f2fd; border-radius: 4px; border: 1px solid #bbdefb;">
+                        <h3 style="margin-top: 0; color: #1565c0;">All Over Maharashtra</h3>
+                        <p>Average Predicted Price: <strong>₹ {{ maharashtra_prediction }}</strong> per kg</p>
+                        <small style="color: #666;">(Calculated across all known crops)</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card ExcelReport">
+                <h2>All data in Excel Report</h2>
+                <a href="reports/farmer_reports.xlsx" download
+                    style="display: inline-block; background-color: #1976d2; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; margin-top: 1rem;">
+                    Download Farmer Report
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Farmer Data Pipeline Project &copy; 2026</p>
+    </footer>
+</body>
+
+</html>

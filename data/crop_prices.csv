@@ -1,0 +1,30 @@
+date,market,crop,price_per_kg
+2024-01-01,Pune,Onion,18
+2024-01-02,Pune,Onion,20
+
+2024-01-01,Nashik,Tomato,15
+2024-01-02,Nashik,Tomato,17
+
+2024-01-01,Mumbai,Potato,22
+2024-01-02,Mumbai,Potato,23
+
+2024-01-01,Nagpur,Wheat,28
+2024-01-02,Nagpur,Wheat,29
+
+2024-01-01,Kolhapur,Sugarcane,3
+2024-01-02,Kolhapur,Sugarcane,4
+
+2024-01-01,Satara,Maize,19
+2024-01-02,Satara,Maize,20
+
+2024-01-01,Aurangabad,Cotton,65
+2024-01-02,Aurangabad,Cotton,67
+
+2024-01-01,Sangli,Grapes,45
+2024-01-02,Sangli,Grapes,47
+
+2024-01-01,Solapur,Jowar,24
+2024-01-02,Solapur,Jowar,25
+
+2024-01-01,Amravati,Tur Dal,82
+2024-01-02,Amravati,Tur Dal,85
